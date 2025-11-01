@@ -30,27 +30,6 @@ const Header = () => {
             />
           </a>
 
-          {/* Navigation */}
-          {/* <nav className="hidden lg:flex items-center space-x-10">
-            <div className="relative group">
-              <button className={`text-sm font-medium transition ${
-                scrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-              }`}>
-                Projects
-              </button>
-            </div>
-            <a href="/about" className={`text-sm font-medium transition ${
-              scrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-            }`}>
-              About
-            </a>
-            <a href="/blogs" className={`text-sm font-medium transition ${
-              scrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-            }`}>
-              Blogs
-            </a>
-          </nav> */}
-
           {/* CTA Button */}
           <div className="flex items-center space-x-4">
             <button onClick={openForm} className={`hidden md:block transition cursor-pointer ${
