@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Email content
     const mailOptions = {
       from: process.env.SMTP_USER,
-      to: 'realstate@gmail.com',
+      to: process.env.RECIPIENT_EMAIL || process.env.SMTP_USER,
       subject: `New Contact Form Submission - Vaishnavi AT-One Krishna Brindavan`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">

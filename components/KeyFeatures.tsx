@@ -51,8 +51,8 @@ const KeyFeatures = () => {
   const { openForm } = useContactForm();
 
   return (
-    <section className="py-20 bg-navy">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section className="py-12 md:py-16 lg:py-20 bg-navy">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
         {/* Heading */}
         <motion.p
           initial={{ opacity: 0, y: -20 }}
@@ -65,7 +65,7 @@ const KeyFeatures = () => {
         </motion.p>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 max-w-5xl mx-auto mb-8 md:mb-16">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -73,7 +73,7 @@ const KeyFeatures = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.05 }}
               viewport={{ once: true }}
-              className={`bg-[#0A1F38] border border-[#1a3a5c] rounded-lg p-6 flex items-center gap-6 ${
+              className={`bg-[#0A1F38] border border-[#1a3a5c] rounded-lg p-4 md:p-6 flex items-center gap-4 md:gap-6 ${
                 feature.isRera ? 'md:col-span-1' : ''
               }`}
             >
@@ -81,15 +81,15 @@ const KeyFeatures = () => {
                 <img
                   src={feature.icon}
                   alt={feature.text}
-                  className="w-12 h-12"
+                  className="w-10 h-10 md:w-12 md:h-12"
                 />
               </div>
               <div>
-                <p className="text-cyan-400 text-base md:text-lg">
+                <p className="text-cyan-400 text-sm sm:text-base md:text-lg">
                   {feature.text}
                 </p>
                 {feature.subtext && (
-                  <p className={`text-cyan-400 ${feature.isRera ? 'text-xs md:text-sm' : 'text-base md:text-lg'}`}>
+                  <p className={`text-cyan-400 ${feature.isRera ? 'text-xs md:text-sm' : 'text-sm sm:text-base md:text-lg'}`}>
                     {feature.subtext}
                   </p>
                 )}

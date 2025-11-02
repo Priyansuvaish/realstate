@@ -28,16 +28,16 @@ const Hero = () => {
       <div className="absolute inset-0 bg-black/30" />
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-32 text-white">
+      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 lg:py-32 text-white">
         <div className="max-w-4xl">
-          <p className="text-lg mb-4">New Launch</p>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <p className="text-sm md:text-base lg:text-lg mb-3 md:mb-4">New Launch</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6">
             Vaishnavi AT-One<br />Krishna Brindavan
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-2xl leading-relaxed">
             A rare courtyard-centric haven, rising in Banashankari. Rooted in heritage, reimagined for the future of South Bengaluru.
           </p>
-          <button onClick={openForm} className="bg-white text-gray-900 px-8 py-4 rounded-md font-semibold hover:bg-gray-100 transition inline-flex items-center space-x-2">
+          <button onClick={openForm} className="bg-white text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-md text-sm md:text-base font-semibold hover:bg-gray-100 transition inline-flex items-center space-x-2">
             <span>Get in touch</span>
             <span>→</span>
           </button>

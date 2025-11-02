@@ -110,9 +110,9 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="relative bg-[#1a3a52] rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+              className="relative bg-[#1a3a52] rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4"
             >
-              <div className="p-8 relative">
+              <div className="p-4 md:p-8 relative">
                 {/* Close button */}
                 <button
                   onClick={() => setIsFormOpen(false)}
@@ -151,13 +151,13 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
                   </div>
 
                   {/* Phone Number with Country Code */}
-                  <div className="flex gap-4">
-                    <div className="w-24">
+                  <div className="flex gap-3 md:gap-4">
+                    <div className="w-20 md:w-24">
                       <select
                         name="countryCode"
                         value={formData.countryCode}
                         onChange={handleChange}
-                        className="w-full px-2 py-3 bg-transparent border-b-2 border-cyan-400 text-white focus:outline-none focus:border-cyan-300"
+                        className="w-full px-1 md:px-2 py-3 bg-transparent border-b-2 border-cyan-400 text-white focus:outline-none focus:border-cyan-300 text-sm md:text-base"
                       >
                         <option value="+91" className="bg-[#1a3a52]">🇮🇳 +91</option>
                         <option value="+1" className="bg-[#1a3a52]">🇺🇸 +1</option>
@@ -203,7 +203,7 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
                       required
                       className="mt-1 w-4 h-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
                     />
-                    <label htmlFor="consent" className="text-white text-xs leading-relaxed">
+                    <label htmlFor="consent" className="text-white text-xs sm:text-sm leading-relaxed">
                       I agree and authorize the promoter company and group, including authorised and appointed third parties to contact me and/or send relevant data over Email, SMS & WhatsApp. This will override the registry with DNC / NDNC.
                     </label>
                   </div>
@@ -224,7 +224,7 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-auto px-12 py-3 bg-cyan-500 text-navy rounded-md hover:bg-cyan-400 transition-all font-semibold uppercase tracking-wide"
+                    className="w-auto px-8 md:px-12 py-2.5 md:py-3 bg-cyan-500 text-navy rounded-md hover:bg-cyan-400 transition-all font-semibold uppercase tracking-wide text-sm md:text-base"
                   >
                     Send
                   </button>
@@ -247,7 +247,7 @@ const FloatingCTA = () => {
       animate={{ scale: 1 }}
       transition={{ duration: 0.5, delay: 1 }}
       onClick={openForm}
-      className="fixed bottom-8 right-8 bg-cyan-500 text-navy px-6 py-3 rounded-md shadow-lg hover:bg-cyan-400 transition-all z-40 flex items-center space-x-2 font-semibold uppercase tracking-wide"
+      className="fixed bottom-4 md:bottom-8 right-4 md:right-8 bg-cyan-500 text-navy px-4 md:px-6 py-2 md:py-3 rounded-md shadow-lg hover:bg-cyan-400 transition-all z-40 flex items-center space-x-2 font-semibold uppercase tracking-wide text-xs md:text-sm"
     >
       <span>Get in Touch</span>
     </motion.button>
