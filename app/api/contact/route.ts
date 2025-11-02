@@ -1,15 +1,73 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+// Sanitization function to escape HTML and prevent XSS
+function escapeHtml(text: string): string {
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// Sanitize and validate input
+function sanitizeInput(input: string): string {
+  // Remove any HTML tags
+  let sanitized = input.replace(/<[^>]*>/g, '');
+
+  // Trim whitespace
+  sanitized = sanitized.trim();
+
+  // Limit length to prevent abuse
+  sanitized = sanitized.substring(0, 1000);
+
+  return sanitized;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, countryCode, phone, message, consent } = body;
+    let { name, email, countryCode, phone, message } = body;
+    const { consent } = body;
+
+    // Sanitize all text inputs
+    name = sanitizeInput(name || '');
+    email = sanitizeInput(email || '');
+    phone = sanitizeInput(phone || '');
+    message = message ? sanitizeInput(message) : '';
+    countryCode = sanitizeInput(countryCode || '+91');
 
     // Validate required fields
     if (!name || !email || !phone || !consent) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Additional validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    const phoneRegex = /^\d{10,15}$/;
+    if (!phoneRegex.test(phone)) {
+      return NextResponse.json(
+        { error: 'Invalid phone number format' },
+        { status: 400 }
+      );
+    }
+
+    if (name.length < 2) {
+      return NextResponse.json(
+        { error: 'Name must be at least 2 characters' },
         { status: 400 }
       );
     }
@@ -26,7 +84,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Email content
+    // Email content with escaped HTML to prevent XSS
     const mailOptions = {
       from: process.env.SMTP_USER,
       to: process.env.RECIPIENT_EMAIL || process.env.SMTP_USER,
@@ -43,15 +101,15 @@ export async function POST(request: NextRequest) {
             <table style="width: 100%; border-collapse: collapse;">
               <tr style="background-color: #f9fafb;">
                 <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold; width: 30%;">Name:</td>
-                <td style="padding: 10px; border: 1px solid #e5e7eb;">${name}</td>
+                <td style="padding: 10px; border: 1px solid #e5e7eb;">${escapeHtml(name)}</td>
               </tr>
               <tr>
                 <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold;">Email:</td>
-                <td style="padding: 10px; border: 1px solid #e5e7eb;">${email}</td>
+                <td style="padding: 10px; border: 1px solid #e5e7eb;">${escapeHtml(email)}</td>
               </tr>
               <tr style="background-color: #f9fafb;">
                 <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold;">Phone:</td>
-                <td style="padding: 10px; border: 1px solid #e5e7eb;">${countryCode} ${phone}</td>
+                <td style="padding: 10px; border: 1px solid #e5e7eb;">${escapeHtml(countryCode)} ${escapeHtml(phone)}</td>
               </tr>
               <tr>
                 <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold;">Project:</td>
@@ -60,7 +118,7 @@ export async function POST(request: NextRequest) {
               ${message ? `
               <tr style="background-color: #f9fafb;">
                 <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold; vertical-align: top;">Message:</td>
-                <td style="padding: 10px; border: 1px solid #e5e7eb;">${message}</td>
+                <td style="padding: 10px; border: 1px solid #e5e7eb;">${escapeHtml(message)}</td>
               </tr>
               ` : ''}
               <tr>

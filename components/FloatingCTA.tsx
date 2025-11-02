@@ -37,6 +37,23 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const openForm = () => setIsFormOpen(true);
 
+  // Sanitization function to prevent XSS
+  const sanitizeInput = (input: string): string => {
+    // Remove HTML tags
+    let sanitized = input.replace(/<[^>]*>/g, '');
+
+    // Remove script tags and their content
+    sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+
+    // Remove potentially dangerous characters
+    sanitized = sanitized.replace(/[<>]/g, '');
+
+    // Trim whitespace
+    sanitized = sanitized.trim();
+
+    return sanitized;
+  };
+
   // Validation functions
   const validateName = (name: string): string => {
     if (!name.trim()) {
@@ -171,7 +188,12 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
-    const newValue = type === 'checkbox' ? checked : value;
+    let newValue: string | boolean = type === 'checkbox' ? checked : value;
+
+    // Sanitize text inputs (but not checkbox or select)
+    if (type !== 'checkbox' && name !== 'countryCode' && typeof newValue === 'string') {
+      newValue = sanitizeInput(newValue);
+    }
 
     setFormData({
       ...formData,
