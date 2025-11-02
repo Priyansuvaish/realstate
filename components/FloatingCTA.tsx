@@ -37,19 +37,14 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const openForm = () => setIsFormOpen(true);
 
-  // Sanitization function to prevent XSS
+  // Sanitization function to prevent XSS (only removes dangerous HTML/scripts)
   const sanitizeInput = (input: string): string => {
-    // Remove HTML tags
-    let sanitized = input.replace(/<[^>]*>/g, '');
+    // Remove HTML tags and script content
+    let sanitized = input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    sanitized = sanitized.replace(/<[^>]*>/g, '');
 
-    // Remove script tags and their content
-    sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-    // Remove potentially dangerous characters
+    // Remove only the dangerous < and > characters (but keep everything else including spaces)
     sanitized = sanitized.replace(/[<>]/g, '');
-
-    // Trim whitespace
-    sanitized = sanitized.trim();
 
     return sanitized;
   };
@@ -140,13 +135,23 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
         submitButton.textContent = 'Sending...';
       }
 
+      // Sanitize form data before sending
+      const sanitizedData = {
+        name: sanitizeInput(formData.name),
+        email: sanitizeInput(formData.email),
+        countryCode: formData.countryCode,
+        phone: sanitizeInput(formData.phone),
+        message: sanitizeInput(formData.message),
+        consent: formData.consent,
+      };
+
       // Send email via API
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(sanitizedData),
       });
 
       if (response.ok) {
@@ -188,13 +193,9 @@ export const ContactFormProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
-    let newValue: string | boolean = type === 'checkbox' ? checked : value;
+    const newValue: string | boolean = type === 'checkbox' ? checked : value;
 
-    // Sanitize text inputs (but not checkbox or select)
-    if (type !== 'checkbox' && name !== 'countryCode' && typeof newValue === 'string') {
-      newValue = sanitizeInput(newValue);
-    }
-
+    // Don't sanitize while typing - only sanitize on submit
     setFormData({
       ...formData,
       [name]: newValue,

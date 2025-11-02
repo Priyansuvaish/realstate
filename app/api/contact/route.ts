@@ -18,7 +18,13 @@ function sanitizeInput(input: string): string {
   // Remove any HTML tags
   let sanitized = input.replace(/<[^>]*>/g, '');
 
-  // Trim whitespace
+  // Remove script tags and their content
+  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+
+  // Remove dangerous characters but keep spaces and normal text
+  sanitized = sanitized.replace(/[<>]/g, '');
+
+  // Only trim leading/trailing whitespace (keep spaces within the text)
   sanitized = sanitized.trim();
 
   // Limit length to prevent abuse
