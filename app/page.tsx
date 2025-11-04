@@ -4,6 +4,7 @@ import KeyFeatures from '@/components/KeyFeatures';
 import VaishnaviSections from '@/components/VaishnaviSections';
 import Footer from '@/components/Footer';
 import FloatingCTA, { ContactFormProvider } from '@/components/FloatingCTA';
+import DriveImage from '@/components/DriveImage';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <main className="min-h-screen">
         <Hero />
         <KeyFeatures />
+        <DriveImage />
         <VaishnaviSections />
         <Footer />
         <FloatingCTA />
