@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const DriveImage = () => {
   const imageUrl = 'https://landresources.s3.ap-southeast-2.amazonaws.com/vaishnavi.jpg';
@@ -67,19 +67,19 @@ const DriveImage = () => {
     lastPointRef.current = null;
   };
 
-  const afterZoomClamp = (nextScale: number) => {
+  const afterZoomClamp = useCallback(() => {
     const { maxX, maxY } = getBounds();
     setTranslate((t) => ({ x: clamp(t.x, -maxX, maxX), y: clamp(t.y, -maxY, maxY) }));
-  };
+  }, [baseSize, scale]);
 
   const zoomIn = () => setScale((s) => {
     const ns = clamp(parseFloat((s + 0.25).toFixed(2)), 1, 4);
-    setTimeout(() => afterZoomClamp(ns), 0);
+    setTimeout(() => afterZoomClamp(), 0);
     return ns;
   });
   const zoomOut = () => setScale((s) => {
     const ns = clamp(parseFloat((s - 0.25).toFixed(2)), 1, 4);
-    setTimeout(() => afterZoomClamp(ns), 0);
+    setTimeout(() => afterZoomClamp(), 0);
     return ns;
   });
   const resetView = () => {
@@ -94,12 +94,12 @@ const DriveImage = () => {
       if (!container || !img) return;
       // Image uses object-contain at scale 1; take current client size
       setBaseSize({ w: img.clientWidth, h: img.clientHeight });
-      afterZoomClamp(scale);
+      afterZoomClamp();
     };
     measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-  }, [scale]);
+  }, [scale, afterZoomClamp]);
 
   return (
     <section className="bg-white py-8 md:py-12">
